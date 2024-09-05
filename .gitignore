@@ -1,0 +1,13 @@
+## PyCharm
+.idea/
+
+## Secure Environment Variables
+.env.prod
+.env.prod.*
+
+## Django Development
+.venv/
+*.sqlite3
+
+## Media Files
+app/mediafiles
