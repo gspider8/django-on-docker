@@ -27,7 +27,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = bool(os.environ.get('DEBUG', default=0))
 
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
-CSRF_TRUSTED_ORIGINS = ["http://localhost:1337", "http://127.0.0.1:1337"]
+# CSRF_TRUSTED_ORIGINS = ["http://localhost:1337", "http://127.0.0.1:1337"]
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS').split(' ')
 
 # Application definition
 
@@ -130,6 +131,9 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Media files
+# -- Media files --
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "mediafiles"
+
+# -- HTTPS --
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

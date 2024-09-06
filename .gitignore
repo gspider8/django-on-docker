@@ -4,6 +4,8 @@
 ## Secure Environment Variables
 .env.prod
 .env.prod.*
+.env.staging
+.env.staging.*
 
 ## Django Development
 .venv/
