@@ -1,40 +1,23 @@
-# Dockerizing Django with PostgreSQL
-
-Ensure that `.dockerignore` includes any local development venv 
-## Production
-Create .env.prod and .env.prod.db in root directory
-Sample .env.prod
-```
-DEBUG=0
-SECRET_KEY=change_me
-DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
-SQL_ENGINE=django.db.backends.postgresql
-SQL_DATABASE=hello_django_prod
-SQL_USER=hello_django
-SQL_PASSWORD=hello_django
-SQL_HOST=db
-SQL_PORT=5432
-DATABASE=postgres
-```
-
-Sample .env.prod.db
-```
-POSTGRES_USER=hello_django
-POSTGRES_PASSWORD=hello_django
-POSTGRES_DB=hello_django_prod
-```
-
-Commands to get up and running
-```shell
-docker-compose -f docker-compose.prod.yml down -v
-docker-compose -f docker-compose.prod.yml up -d --build
-docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput
-docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear
-```
 # Securing a Containerized Django Application with Let's Encrypt
 link: https://testdriven.io/blog/django-lets-encrypt/
 domain name: toruscommunity.org
+
+Ensure that `.dockerignore` includes any local development venv 
+## Development Environment
+```shell
+docker-compose up -d # --build
+```
+accessible at http://127.0.0.1:8000
+
 ## Staging Environment
+**Build images and spin up containers**
+```sh
+# up
+sudo docker-compose -f docker-compose.staging.yml up -d --build
+
+# down
+sudo docker-compose -f docker-compose.staging.yml down -v  # removes volumes
+```
 **New containers**
 - nginx-proxy
   - handles routing
@@ -154,18 +137,54 @@ docker-compose version
   - docker-compose.staging.yml
   - .env.staging, .env.staging.db, .env.staging.proxy-companion
 
-**Build images and spin up containers**
-```sh
-# up
-sudo docker-compose -f docker-compose.staging.yml up -d --build
 
-# down
-sudo docker-compose -f docker-compose.staging.yml down -v
-```
 <callout>
   <p>Have docker and docker-compose installed on instance startup in future</p>
   <p>that's a good use of userdata</p>
 </callout>
 
 ## Production Environment
+Create _.env.prod_, _.env.prod.db_, and _.env.prod.proxy-companion_ in root project directory
+
+**_.env.prod_**
+```
+DEBUG=0
+SECRET_KEY=change_me
+DJANGO_ALLOWED_HOSTS=<YOUR_DOMAIN.COM>
+SQL_ENGINE=django.db.backends.postgresql
+SQL_DATABASE=hello_django_prod
+SQL_USER=<YOUR_USERNAME>
+SQL_PASSWORD=<YOUR_PASSWORD>
+SQL_HOST=db
+SQL_PORT=5432
+DATABASE=postgres
+VIRTUAL_HOST=<YOUR_DOMAIN.COM>
+VIRTUAL_PORT=8000
+LETSENCRYPT_HOST=<YOUR_DOMAIN.COM>
+CSRF_TRUSTED_ORIGINS=https://<YOUR_DOMAIN.COM>
+```
+
+**_.env.prod.db_**
+```
+POSTGRES_USER=<YOUR_USERNAME>
+POSTGRES_PASSWORD=<YOUR_PASSWORD>
+POSTGRES_DB=hello_django_prod
+```
+
+**_.env.prod.db_**
+```
+DEFAULT_EMAIL=youremail@yourdomain.co
+NGINX_PROXY_CONTAINER=nginx-proxy
+```
+- `ACME_CA_URI` environment variable is not set since the `acme-companion` image uses Let's Encrypt's production environment by default.
+
+The only difference between docker-compose.prod.yml and docker-compose.staging.yml is the different environment files
+
+Commands to get up and running
+```shell
+docker-compose -f docker-compose.prod.yml down -v
+docker-compose -f docker-compose.prod.yml up -d --build
+docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput
+docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear
+```
 
