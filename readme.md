@@ -2,7 +2,7 @@
 
 Ensure that `.dockerignore` includes any local development venv 
 ## Production
-Create .env.prod and .env.prod.db
+Create .env.prod and .env.prod.db in root directory
 Sample .env.prod
 ```
 DEBUG=0
