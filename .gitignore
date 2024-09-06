@@ -10,6 +10,7 @@
 ## Django Development
 .venv/
 *.sqlite3
+app/staticfiles/
 
 ## Media Files
 app/mediafiles
