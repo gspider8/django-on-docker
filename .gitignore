@@ -2,10 +2,10 @@
 .idea/
 
 ## Secure Environment Variables
-.env.prod
-.env.prod.*
-.env.staging
-.env.staging.*
+#.env.prod
+#.env.prod.*
+#.env.staging
+#.env.staging.*
 
 ## Django Development
 .venv/
@@ -14,3 +14,8 @@ app/staticfiles/
 
 ## Media Files
 app/mediafiles
+
+## Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
